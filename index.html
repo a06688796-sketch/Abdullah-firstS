@@ -1,0 +1,1348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title id="pageTitle">Abdullah Usman - Lusion Studio</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>✦</text></svg>">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html {
+      scroll-behavior: smooth;
+     
+
+    body {
+      background: #0a0a0a;
+      color: #fff;
+      font-family: 'Inter', sans-serif;
+      overflow-x: hidden;
+      cursor: none;
+    }
+
+    ::-webkit-scrollbar { width: 0; }
+
+    /* Custom Cursor */
+    .cursor {
+      position: fixed;
+      pointer-events: none;
+      z-index: 99999;
+      mix-blend-mode: difference;
+    }
+    .cursor-dot {
+      width: 8px;
+      height: 8px;
+      background: #fff;
+      border-radius: 50%;
+      position: fixed;
+      transform: translate(-50%, -50%);
+      transition: width 0.2s, height 0.2s;
+      z-index: 99999;
+      pointer-events: none;
+    }
+    .cursor-ring {
+      width: 40px;
+      height: 40px;
+      border: 1px solid rgba(255,255,255,0.3);
+      border-radius: 50%;
+      position: fixed;
+      transform: translate(-50%, -50%);
+      transition: width 0.3s, height 0.3s, border-color 0.3s;
+      z-index: 99998;
+      pointer-events: none;
+    }
+    .cursor-ring.hover {
+      width: 70px;
+      height: 70px;
+      border-color: rgba(255,255,255,0.6);
+      background: rgba(255,255,255,0.05);
+    }
+
+    /* Loading Screen */
+    .loader {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: #0a0a0a;
+      z-index: 99990;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      transition: opacity 1s ease, visibility 1s ease;
+    }
+    .loader.hidden {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+    .loader-percent {
+      font-size: 180px;
+      font-weight: 800;
+      color: #fff;
+      line-height: 1;
+      font-family: 'Inter', sans-serif;
+      letter-spacing: -8px;
+    }
+    .loader-percent .percent-symbol {
+      font-size: 80px;
+      color: rgba(255,255,255,0.2);
+      font-weight: 300;
+    }
+    .loader-bar {
+      width: 200px;
+      height: 2px;
+      background: rgba(255,255,255,0.1);
+      margin-top: 40px;
+      border-radius: 2px;
+      overflow: hidden;
+      position: relative;
+    }
+    .loader-bar-fill {
+      width: 100%;
+      height: 100%;
+      background: #fff;
+      border-radius: 2px;
+      transition: width 0.1s linear;
+    }
+    .loader-text {
+      margin-top: 20px;
+      font-size: 12px;
+      letter-spacing: 6px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.4);
+      font-weight: 300;
+    }
+    .loader-name {
+      position: absolute;
+      bottom: 60px;
+      font-size: 14px;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.15);
+      font-weight: 300;
+    }
+
+    /* Navigation */
+    .nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      padding: 30px 50px;
+      z-index: 1000;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      mix-blend-mode: difference;
+      pointer-events: none;
+    }
+    .nav * {
+      pointer-events: auto;
+    }
+    .nav-logo {
+      font-size: 13px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      font-weight: 500;
+      color: #fff;
+      text-decoration: none;
+      opacity: 0;
+      animation: fadeIn 1s ease 2.5s forwards;
+    }
+    .nav-logo span {
+      color: rgba(255,255,255,0.3);
+    }
+    .nav-links {
+      display: flex;
+      gap: 35px;
+      list-style: none;
+      opacity: 0;
+      animation: fadeIn 1s ease 2.5s forwards;
+    }
+    .nav-links a {
+      color: #fff;
+      text-decoration: none;
+      font-size: 12px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      font-weight: 400;
+      transition: opacity 0.3s;
+      position: relative;
+    }
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      left: 0;
+      width: 0;
+      height: 1px;
+      background: #fff;
+      transition: width 0.4s ease;
+    }
+    .nav-links a:hover::after {
+      width: 100%;
+    }
+    .nav-links a:hover {
+      opacity: 0.7;
+    }
+    .nav-menu-btn {
+      background: none;
+      border: none;
+      color: #fff;
+      font-size: 11px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      cursor: pointer;
+      font-family: 'Inter', sans-serif;
+      opacity: 0;
+      animation: fadeIn 1s ease 2.5s forwards;
+    }
+
+    /* Hero */
+    .hero {
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+    }
+    #canvas-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      pointer-events: none;
+    }
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      max-width: 1200px;
+      padding: 0 40px;
+    }
+    .hero-tag {
+      font-size: 11px;
+      letter-spacing: 5px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.3);
+      margin-bottom: 30px;
+      font-weight: 400;
+      opacity: 0;
+      animation: fadeUp 1s ease 2.8s forwards;
+    }
+    .hero-title {
+      font-size: clamp(42px, 7vw, 110px);
+      font-weight: 300;
+      line-height: 1.05;
+      letter-spacing: -2px;
+    }
+    .hero-title .line {
+      display: block;
+      overflow: hidden;
+    }
+    .hero-title .line span {
+      display: block;
+      opacity: 0;
+      transform: translateY(100px);
+      animation: revealText 1.2s ease forwards;
+    }
+    .hero-title .line:nth-child(1) span { animation-delay: 3s; }
+    .hero-title .line:nth-child(2) span { animation-delay: 3.2s; }
+    .hero-title .line:nth-child(3) span { animation-delay: 3.4s; }
+    .hero-title .highlight {
+      font-style: italic;
+      font-family: 'Playfair Display', serif;
+      font-weight: 400;
+      color: rgba(255,255,255,0.9);
+    }
+    .hero-title .highlight-name {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      background: linear-gradient(135deg, #fff, #888);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .hero-scroll {
+      position: absolute;
+      bottom: 40px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 15px;
+      opacity: 0;
+      animation: fadeIn 1s ease 4s forwards;
+    }
+    .hero-scroll span {
+      font-size: 10px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.3);
+      font-weight: 300;
+    }
+    .scroll-line {
+      width: 1px;
+      height: 60px;
+      background: linear-gradient(to bottom, rgba(255,255,255,0.3), transparent);
+      animation: scrollPulse 2s ease-in-out infinite;
+    }
+
+    /* Section */
+    .section {
+      position: relative;
+      z-index: 2;
+      padding: 160px 50px;
+      background: #0a0a0a;
+    }
+    .section-outro {
+      background: transparent;
+    }
+    .section-header {
+      max-width: 1400px;
+      margin: 0 auto 80px;
+    }
+    .section-tag {
+      font-size: 11px;
+      letter-spacing: 5px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.2);
+      margin-bottom: 20px;
+      font-weight: 400;
+    }
+    .section-title {
+      font-size: clamp(36px, 5vw, 80px);
+      font-weight: 300;
+      line-height: 1.1;
+      letter-spacing: -1px;
+    }
+    .section-title em {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      color: rgba(255,255,255,0.7);
+    }
+    .section-text {
+      font-size: 18px;
+      line-height: 1.8;
+      color: rgba(255,255,255,0.5);
+      max-width: 700px;
+      font-weight: 300;
+      margin-top: 30px;
+    }
+    .section-text a {
+      color: #fff;
+      text-decoration: none;
+      border-bottom: 1px solid rgba(255,255,255,0.2);
+      transition: border-color 0.3s;
+    }
+    .section-text a:hover {
+      border-color: #fff;
+    }
+
+    /* About / Approach */
+    .approach {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      max-width: 1400px;
+      margin: 0 auto;
+      align-items: center;
+    }
+    .approach-left .number {
+      font-size: 12px;
+      letter-spacing: 3px;
+      color: rgba(255,255,255,0.15);
+      margin-bottom: 15px;
+    }
+    .approach-left h2 {
+      font-size: clamp(28px, 3.5vw, 56px);
+      font-weight: 300;
+      line-height: 1.1;
+      letter-spacing: -1px;
+    }
+    .approach-left h2 em {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+    }
+    .approach-left p {
+      font-size: 15px;
+      line-height: 1.9;
+      color: rgba(255,255,255,0.45);
+      margin-top: 25px;
+      font-weight: 300;
+    }
+    .approach-left .btn {
+      display: inline-block;
+      margin-top: 35px;
+      padding: 14px 40px;
+      border: 1px solid rgba(255,255,255,0.15);
+      color: #fff;
+      text-decoration: none;
+      font-size: 11px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      transition: all 0.4s;
+      font-weight: 400;
+    }
+    .approach-left .btn:hover {
+      background: #fff;
+      color: #0a0a0a;
+    }
+    .profile-row {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-top: 30px;
+    }
+    .profile-avatar {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.1);
+      flex-shrink: 0;
+    }
+    .profile-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: grayscale(0.5);
+    }
+    .profile-info {
+      display: flex;
+      flex-direction: column;
+    }
+    .profile-info strong {
+      font-size: 14px;
+      font-weight: 500;
+      color: rgba(255,255,255,0.8);
+    }
+    .profile-info span {
+      font-size: 12px;
+      color: rgba(255,255,255,0.3);
+      font-weight: 300;
+      margin-top: 2px;
+    }
+    .approach-right {
+      position: relative;
+    }
+    .approach-right .play-reel {
+      position: relative;
+      width: 100%;
+      padding-bottom: 75%;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.06);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      overflow: hidden;
+    }
+    .approach-right .play-reel .play-btn {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.4s;
+      position: relative;
+    }
+    .approach-right .play-reel .play-btn::after {
+      content: '\25B6';
+      font-size: 18px;
+      color: #fff;
+      margin-left: 3px;
+    }
+    .approach-right .play-reel:hover .play-btn {
+      transform: scale(1.15);
+      border-color: #fff;
+      background: rgba(255,255,255,0.05);
+    }
+    .approach-right .play-reel .reel-label {
+      position: absolute;
+      bottom: 30px;
+      left: 30px;
+      font-size: 11px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.2);
+      font-weight: 300;
+    }
+    .approach-right .play-reel .reel-fallback {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      min-width: 100%;
+      min-height: 100%;
+      transform: translate(-50%, -50%);
+      object-fit: cover;
+      z-index: 0;
+      opacity: 0.3;
+    }
+
+    /* Featured Work Grid */
+    .work-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2px;
+      max-width: 1400px;
+      margin: 0 auto;
+      background: rgba(255,255,255,0.03);
+    }
+    .work-item {
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+      background: #0a0a0a;
+      padding: 60px 50px;
+      transition: background 0.4s;
+      min-height: 340px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      border: 1px solid rgba(255,255,255,0.03);
+      background-size: cover;
+      background-position: center;
+    }
+    .work-item::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(10,10,10,0.95) 20%, rgba(10,10,10,0.3) 60%, rgba(10,10,10,0.6) 100%);
+      z-index: 0;
+      transition: opacity 0.5s;
+    }
+    .work-item:hover::before {
+      opacity: 0.7;
+    }
+    .work-item:hover {
+      background: rgba(255,255,255,0.02);
+    }
+    .work-item .work-bg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: 0;
+      opacity: 0.4;
+      transition: transform 0.6s ease, opacity 0.5s;
+    }
+    .work-item:hover .work-bg {
+      transform: scale(1.08);
+      opacity: 0.6;
+    }
+    .work-item > *:not(.work-bg):not(::before) {
+      position: relative;
+      z-index: 1;
+    }
+    .work-item .work-tags {
+      font-size: 10px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.3);
+      margin-bottom: 15px;
+      font-weight: 400;
+    }
+    .work-item .work-title {
+      font-size: clamp(24px, 2.5vw, 42px);
+      font-weight: 300;
+      letter-spacing: -0.5px;
+    }
+    .work-item .work-arrow {
+      position: absolute;
+      top: 40px;
+      right: 40px;
+      font-size: 20px;
+      color: rgba(255,255,255,0.2);
+      transition: transform 0.4s, color 0.4s;
+      z-index: 2;
+    }
+    .work-item:hover .work-arrow {
+      transform: translate(5px, -5px);
+      color: rgba(255,255,255,0.7);
+    }
+
+    /* Vision Section */
+    .vision {
+      max-width: 1400px;
+      margin: 0 auto;
+      position: relative;
+    }
+    .vision .big-text {
+      font-size: clamp(40px, 6vw, 120px);
+      font-weight: 300;
+      line-height: 1.05;
+      letter-spacing: -3px;
+    }
+    .vision .big-text .italic {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      display: block;
+      color: rgba(255,255,255,0.7);
+    }
+    .vision .big-text .fade {
+      color: rgba(255,255,255,0.15);
+    }
+
+    /* CTA */
+    .cta {
+      padding: 160px 50px 100px;
+      text-align: center;
+      position: relative;
+      z-index: 2;
+      background: #0a0a0a;
+      overflow: hidden;
+    }
+    .cta-bg {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      opacity: 0.06;
+    }
+    .cta-bg img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .cta > *:not(.cta-bg) {
+      position: relative;
+      z-index: 1;
+    }
+    .cta h2 {
+      font-size: clamp(32px, 4vw, 72px);
+      font-weight: 300;
+      letter-spacing: -1px;
+      line-height: 1.1;
+    }
+    .cta h2 em {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+    }
+    .cta .btn {
+      display: inline-block;
+      margin-top: 50px;
+      padding: 18px 60px;
+      background: #fff;
+      color: #0a0a0a;
+      text-decoration: none;
+      font-size: 12px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      font-weight: 600;
+      transition: all 0.4s;
+      border: 1px solid transparent;
+    }
+    .cta .btn:hover {
+      background: transparent;
+      color: #fff;
+      border-color: rgba(255,255,255,0.3);
+    }
+
+    /* Footer */
+    .footer {
+      position: relative;
+      z-index: 2;
+      padding: 80px 50px;
+      background: #0a0a0a;
+      border-top: 1px solid rgba(255,255,255,0.04);
+      overflow: hidden;
+    }
+    .footer-video {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      opacity: 0.08;
+      pointer-events: none;
+    }
+    .footer-video video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .footer > *:not(.footer-video) {
+      position: relative;
+      z-index: 1;
+    }
+    .footer-inner {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 60px;
+    }
+    .footer h4 {
+      font-size: 11px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.3);
+      margin-bottom: 20px;
+      font-weight: 500;
+    }
+    .footer p, .footer a {
+      font-size: 14px;
+      color: rgba(255,255,255,0.4);
+      line-height: 2;
+      text-decoration: none;
+      display: block;
+      font-weight: 300;
+      transition: color 0.3s;
+    }
+    .footer a:hover {
+      color: #fff;
+    }
+    .footer .newsletter-form {
+      display: flex;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      padding-bottom: 10px;
+      margin-top: 10px;
+    }
+    .footer .newsletter-form input {
+      background: none;
+      border: none;
+      color: #fff;
+      font-size: 14px;
+      font-family: 'Inter', sans-serif;
+      flex: 1;
+      outline: none;
+    }
+    .footer .newsletter-form input::placeholder {
+      color: rgba(255,255,255,0.2);
+      font-weight: 300;
+    }
+    .footer .newsletter-form button {
+      background: none;
+      border: none;
+      color: #fff;
+      font-size: 11px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      cursor: pointer;
+      font-family: 'Inter', sans-serif;
+      font-weight: 400;
+    }
+    .footer-bottom {
+      max-width: 1400px;
+      margin: 60px auto 0;
+      padding-top: 30px;
+      border-top: 1px solid rgba(255,255,255,0.04);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .footer-bottom p {
+      font-size: 12px;
+      color: rgba(255,255,255,0.15);
+      letter-spacing: 1px;
+    }
+    .footer-bottom .credit {
+      font-size: 12px;
+      color: rgba(255,255,255,0.15);
+    }
+    .footer-bottom .credit a {
+      display: inline;
+      color: rgba(255,255,255,0.3);
+      text-decoration: none;
+    }
+    .footer-bottom .credit a:hover {
+      color: #fff;
+    }
+
+    /* Scroll-triggered animations */
+    .reveal {
+      opacity: 0;
+      transform: translateY(60px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal-delay-2 { transition-delay: 0.2s; }
+    .reveal-delay-3 { transition-delay: 0.3s; }
+    .reveal-delay-4 { transition-delay: 0.4s; }
+
+    @keyframes fadeIn {
+      to { opacity: 1; }
+    }
+    @keyframes fadeUp {
+      to { opacity: 1; transform: translateY(0); }
+      from { opacity: 0; transform: translateY(20px); }
+    }
+    @keyframes revealText {
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes scrollPulse {
+      0%, 100% { opacity: 0.3; }
+      50% { opacity: 1; }
+    }
+
+    /* Split text for hero */
+    .split-text {
+      overflow: hidden;
+    }
+
+    /* Responsive */
+    @media (max-width: 900px) {
+      .nav { padding: 20px 25px; }
+      .nav-links { display: none; }
+      .section { padding: 100px 25px; }
+      .approach { grid-template-columns: 1fr; gap: 50px; }
+      .work-grid { grid-template-columns: 1fr; }
+      .footer-inner { grid-template-columns: 1fr 1fr; gap: 40px; }
+      .footer-bottom { flex-direction: column; gap: 15px; text-align: center; }
+      .hero-title { font-size: clamp(30px, 10vw, 60px); }
+      .cta { padding: 100px 25px 60px; }
+      .loader-percent { font-size: 100px; }
+      .loader-percent .percent-symbol { font-size: 50px; }
+    }
+
+    .marquee {
+      position: relative;
+      z-index: 2;
+      background: #0a0a0a;
+      padding: 40px 0;
+      overflow: hidden;
+      border-top: 1px solid rgba(255,255,255,0.04);
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+    .marquee-track {
+      display: flex;
+      white-space: nowrap;
+      animation: marquee 30s linear infinite;
+    }
+    .marquee-text {
+      font-size: clamp(14px, 1.2vw, 22px);
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.08);
+      font-weight: 300;
+      padding-right: 60px;
+    }
+    @keyframes marquee {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+
+    .particle-text {
+      position: relative;
+      z-index: 2;
+    }
+
+    .sticky-scroll {
+      position: relative;
+      z-index: 2;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="cursor">
+    <div class="cursor-dot" id="cursorDot"></div>
+    <div class="cursor-ring" id="cursorRing"></div>
+  </div>
+
+  <!-- Loader -->
+  <div class="loader" id="loader">
+    <div class="loader-percent" id="loaderPercent">1<span class="percent-symbol">%</span></div>
+    <div class="loader-bar">
+      <div class="loader-bar-fill" id="loaderBarFill" style="width:1%"></div>
+    </div>
+    <div class="loader-text">Loading Experience</div>
+    <div class="loader-name">Abdullah Usman</div>
+  </div>
+
+  <!-- Navigation -->
+  <nav class="nav">
+    <a href="/" class="nav-logo" id="navLogo">Abdullah <span>Usman</span></a>
+    <ul class="nav-links">
+      <li><a href="#">Home</a></li>
+      <li><a href="#">About</a></li>
+      <li><a href="#">Projects</a></li>
+      <li><a href="#">Contact</a></li>
+    </ul>
+    <button class="nav-menu-btn">Menu</button>
+  </nav>
+
+  <!-- 3D Canvas -->
+  <div id="canvas-container"></div>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-content">
+      <div class="hero-tag" id="heroTag">Abdullah Usman &mdash; Interactive Studio</div>
+      <h1 class="hero-title" id="heroTitle">
+        <span class="line"><span>We create 3D visual</span></span>
+        <span class="line"><span>storytelling and interactive</span></span>
+        <span class="line"><span>web experiences that <span class="highlight-name">stand out</span></span></span>
+      </h1>
+    </div>
+    <div class="hero-scroll">
+      <span>Scroll to explore</span>
+      <div class="scroll-line"></div>
+    </div>
+  </section>
+
+  <!-- About Section -->
+  <section class="section" id="about">
+    <div class="approach">
+      <div class="approach-left">
+        <div class="number reveal" id="aboutNumber">01 &mdash; Approach</div>
+        <h2 class="reveal reveal-delay-1" id="aboutHeading">
+          <em>Bold Ideas,</em><br>
+          Brought to Life
+        </h2>
+        <p class="reveal reveal-delay-2" id="aboutText">
+          We combine design, motion, 3D, and development to create digital experiences that feel visually striking and technically seamless. From campaign launches to immersive brand worlds, we build work that captures attention and invites interaction. <strong style="color:rgba(255,255,255,0.7);">&mdash; Abdullah Usman</strong>
+        </p>
+        <div class="profile-row reveal reveal-delay-3">
+          <div class="profile-info">
+            <strong id="profileName">Abdullah Usman</strong>
+            <span id="profileRole">Creative Director &amp; 3D Artist</span>
+          </div>
+        </div>
+        <a href="#" class="btn reveal reveal-delay-3" style="margin-top:25px;">Our Approach</a>
+      </div>
+      <div class="approach-right reveal reveal-delay-2">
+        <div class="play-reel" style="overflow:hidden;">
+          <img src="https://images.unsplash.com/photo-1541701494587-cb58502866ab?w=800&q=80" alt="" class="reel-fallback" loading="lazy">
+          <video autoplay muted loop playsinline style="position:absolute;top:50%;left:50%;min-width:100%;min-height:100%;width:auto;height:auto;transform:translate(-50%,-50%);object-fit:cover;">
+            <source src="https://cdn.coverr.co/videos/coverr-abstract-3d-shapes-5604/1080p.mp4" type="video/mp4">
+          </video>
+          <div class="play-btn" style="position:relative;z-index:2;backdrop-filter:blur(10px);background:rgba(255,255,255,0.05);"></div>
+          <span class="reel-label" style="position:relative;z-index:2;">▶ Playing</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Marquee -->
+  <div class="marquee">
+    <div class="marquee-track">
+      <span class="marquee-text">Abdullah Usman &mdash; 3D Visual Storytelling &amp; Interactive Web Experiences</span>
+      <span class="marquee-text">Abdullah Usman &mdash; 3D Visual Storytelling &amp; Interactive Web Experiences</span>
+      <span class="marquee-text">Abdullah Usman &mdash; 3D Visual Storytelling &amp; Interactive Web Experiences</span>
+      <span class="marquee-text">Abdullah Usman &mdash; 3D Visual Storytelling &amp; Interactive Web Experiences</span>
+    </div>
+  </div>
+
+  <!-- Featured Work -->
+  <section class="section" id="work">
+    <div class="section-header">
+      <div class="section-tag reveal">Featured Work</div>
+      <h2 class="section-title reveal reveal-delay-1">
+        A selection of immersive digital experiences created for <em>ambitious brands</em> and forward thinking teams.
+      </h2>
+    </div>
+    <div class="work-grid" id="workGrid">
+    </div>
+  </section>
+
+  <!-- Vision Section -->
+  <section class="section section-outro" id="vision">
+    <div class="vision">
+      <div class="big-text reveal">
+        Where Creative Ideas<br>
+        <span class="italic reveal reveal-delay-1">Become Immersive</span>
+        <span class="fade reveal reveal-delay-2">Experiences</span>
+      </div>
+      <p class="section-text reveal reveal-delay-3" style="max-width: 900px; margin-top: 60px;">
+        We do not chase trends or produce work that looks like everyone else. We focus on creating visually distinctive digital experiences that reflect your brand, engage your audience, and make people remember what they saw.
+      </p>
+      <p class="section-text reveal reveal-delay-4" style="max-width: 900px;">
+        Our process blends creative direction, 3D craft, and interactive development to build tailored digital journeys that feel original, polished, and built for impact.
+      </p>
+      <p class="section-text reveal reveal-delay-4" style="max-width: 900px; margin-top: 40px; color: rgba(255,255,255,0.3); font-size: 14px;">
+        Crafted by <strong style="color: rgba(255,255,255,0.7);">Abdullah Usman</strong>
+      </p>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta" id="contact">
+    <div class="cta-bg">
+      <img src="https://images.unsplash.com/photo-1553356084-58ef4a67b2a7?w=1600&q=80" alt="" loading="lazy">
+    </div>
+    <h2 class="reveal" id="ctaHeading">
+      Step into a new world<br>
+      and let your <em>imagination run wild</em>
+    </h2>
+    <h2 class="reveal reveal-delay-1" style="margin-top: 30px; font-size: clamp(20px, 2.5vw, 40px); color: rgba(255,255,255,0.3); font-weight: 300;" id="ctaSubheading">
+      Is Your Big Idea Ready to Go Wild?
+    </h2>
+    <a href="mailto:abdullah@example.com" class="btn reveal reveal-delay-2" id="ctaButton">Let's Work Together</a>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-video">
+      <video autoplay muted loop playsinline>
+        <source src="https://cdn.coverr.co/videos/coverr-abstract-fluid-art-5896/1080p.mp4" type="video/mp4">
+      </video>
+    </div>
+    <div class="footer-inner">
+      <div>
+        <h4 id="footerName">Abdullah Usman</h4>
+        <p style="color: rgba(255,255,255,0.2); font-size: 12px; letter-spacing: 1px;" id="footerDesc">
+          3D Visual Storytelling &amp; Interactive Web Experiences
+        </p>
+        <div class="newsletter-form">
+          <input type="email" placeholder="Subscribe to our newsletter">
+          <button type="submit">Send</button>
+        </div>
+      </div>
+      <div>
+        <h4>Studio</h4>
+        <p id="footerAddress">Suite 2<br>9 Marsh Street<br>Bristol, BS1 4AA<br>United Kingdom</p>
+      </div>
+      <div>
+        <h4>Social</h4>
+        <a href="#">Twitter / X</a>
+        <a href="#">Instagram</a>
+        <a href="#">LinkedIn</a>
+      </div>
+      <div>
+        <h4>Contact</h4>
+        <a href="mailto:hello@abdullahusman.com" id="footerEmail">hello@abdullahusman.com</a>
+        <a href="mailto:business@abdullahusman.com" id="footerEmail2">business@abdullahusman.com</a>
+        <p style="margin-top: 20px; font-size: 12px; color: rgba(255,255,255,0.15);">R&amp;D: labs.abdullahusman.com</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p id="footerCopyright">&copy; 2026 Abdullah Usman Creative Studio</p>
+      <p class="credit">Built by <a href="#">Abdullah Usman</a> with ❤️</p>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script>
+    // =============================================
+    // LOAD CONTENT FROM API
+    // =============================================
+    async function loadContent() {
+      try {
+        const res = await fetch('/api/content');
+        const data = await res.json();
+        if (data.site) applyContent(data.site, data.work);
+      } catch (e) {
+        console.log('Using default content');
+      }
+    }
+
+    function applyContent(site, work) {
+      document.title = site.title || 'Abdullah Usman - Lusion Studio';
+
+      setText('heroTag', site.tagline);
+      const heroTitle = site.heroTitle || [];
+      const lines = document.querySelectorAll('#heroTitle .line span');
+      if (lines.length >= 3) {
+        lines.forEach((el, i) => {
+          if (heroTitle[i]) el.innerHTML = heroTitle[i].replace('stand out', '<span class="highlight-name">stand out</span>');
+        });
+      }
+
+      setText('aboutNumber', site.aboutNumber);
+      if (site.aboutHeading) {
+        const parts = site.aboutHeading.split(',');
+        if (parts.length > 1) {
+          document.getElementById('aboutHeading').innerHTML = '<em>' + parts[0] + ',</em><br>' + parts[1].trim();
+        } else {
+          document.getElementById('aboutHeading').textContent = site.aboutHeading;
+        }
+      }
+      if (site.aboutText) {
+        document.getElementById('aboutText').innerHTML = site.aboutText;
+      }
+      if (site.profileImage) document.getElementById('profileImage').src = site.profileImage;
+      setText('profileName', site.profileName);
+      setText('profileRole', site.profileRole);
+
+      if (site.ctaHeading) {
+        const parts = site.ctaHeading.split('imagination run wild');
+        if (parts.length > 1) {
+          document.getElementById('ctaHeading').innerHTML = parts[0] + '<em>imagination run wild</em>';
+        } else {
+          document.getElementById('ctaHeading').textContent = site.ctaHeading;
+        }
+      }
+      setText('ctaSubheading', site.ctaSubheading);
+      if (site.ctaEmail) document.getElementById('ctaButton').href = site.ctaEmail;
+      setText('ctaButton', site.ctaButton);
+
+      setText('footerName', site.footerName);
+      setText('footerDesc', site.footerDesc);
+      if (site.footerAddress) document.getElementById('footerAddress').innerHTML = site.footerAddress.replace(/\n/g, '<br>');
+      if (site.footerEmail) document.getElementById('footerEmail').href = 'mailto:' + site.footerEmail;
+      setText('footerEmail', site.footerEmail);
+      if (site.footerEmail2) document.getElementById('footerEmail2').href = 'mailto:' + site.footerEmail2;
+      setText('footerEmail2', site.footerEmail2);
+      setText('footerCopyright', site.footerCopyright);
+
+      if (site.navLogo) {
+        const logo = document.getElementById('navLogo');
+        const parts = site.navLogo.split(' ');
+        if (parts.length > 1) {
+          logo.innerHTML = parts.slice(0, -1).join(' ') + ' <span>' + parts[parts.length - 1] + '</span>';
+        } else {
+          logo.textContent = site.navLogo;
+        }
+      }
+
+      // Render work items
+      if (work && work.length) {
+        const grid = document.getElementById('workGrid');
+        grid.innerHTML = work.map((w, i) => {
+          const delays = ['', ' reveal-delay-1', ' reveal-delay-2', ' reveal-delay-3'];
+          const delay = delays[i % 4];
+          return `
+            <div class="work-item reveal\${delay}" style="background-image: url('\${w.image}');">
+              <img class="work-bg" src="\${w.image}" alt="\${w.title}" loading="lazy">
+              <span class="work-tags">\${w.tags}</span>
+              <h3 class="work-title">\${w.title}</h3>
+              <span class="work-arrow">↗</span>
+            </div>
+          `;
+        }).join('');
+        // Re-observe new reveal elements
+        document.querySelectorAll('.reveal').forEach(el => {
+          if (revealObserver) revealObserver.observe(el);
+        });
+      }
+    }
+
+    function setText(id, val) {
+      const el = document.getElementById(id);
+      if (el && val) el.textContent = val;
+    }
+
+    // =============================================
+    // LOADER
+    // =============================================
+    (function() {
+      const loader = document.getElementById('loader');
+      const percentEl = document.getElementById('loaderPercent');
+      const barFill = document.getElementById('loaderBarFill');
+
+      let progress = 1;
+      const duration = 3000;
+      const steps = 100;
+      const stepTime = duration / steps;
+
+      function updateLoader() {
+        progress = Math.min(100, progress + 1);
+        percentEl.innerHTML = Math.round(progress) + '<span class="percent-symbol">%</span>';
+        barFill.style.width = progress + '%';
+        if (progress < 100) {
+          setTimeout(updateLoader, stepTime);
+        } else {
+          percentEl.innerHTML = '100<span class="percent-symbol">%</span>';
+          barFill.style.width = '100%';
+          setTimeout(() => {
+            loader.classList.add('hidden');
+          }, 400);
+        }
+      }
+      setTimeout(updateLoader, 600);
+    })();
+
+    // =============================================
+    // CUSTOM CURSOR
+    // =============================================
+    const dot = document.getElementById('cursorDot');
+    const ring = document.getElementById('cursorRing');
+    let mouseX = 0, mouseY = 0;
+    let ringX = 0, ringY = 0;
+
+    document.addEventListener('mousemove', (e) => {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+      dot.style.left = mouseX + 'px';
+      dot.style.top = mouseY + 'px';
+    });
+
+    function animateCursor() {
+      ringX += (mouseX - ringX) * 0.1;
+      ringY += (mouseY - ringY) * 0.1;
+      ring.style.left = ringX + 'px';
+      ring.style.top = ringY + 'px';
+      requestAnimationFrame(animateCursor);
+    }
+    animateCursor();
+
+    document.querySelectorAll('a, button, .work-item, .play-reel, .btn').forEach(el => {
+      el.addEventListener('mouseenter', () => ring.classList.add('hover'));
+      el.addEventListener('mouseleave', () => ring.classList.remove('hover'));
+    });
+
+    // =============================================
+    // THREE.JS 3D BACKGROUND
+    // =============================================
+    let scene, camera, renderer;
+    let particles, particleCount = 2500;
+    let mouse3D = { x: 0, y: 0 };
+    let clock = new THREE.Clock();
+
+    function init3D() {
+      const container = document.getElementById('canvas-container');
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+
+      scene = new THREE.Scene();
+      scene.background = new THREE.Color(0x0a0a0a);
+
+      camera = new THREE.PerspectiveCamera(75, w / h, 0.1, 1000);
+      camera.position.z = 30;
+
+      renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+      renderer.setSize(w, h);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      container.appendChild(renderer.domElement);
+
+      // Particles
+      const geometry = new THREE.BufferGeometry();
+      const positions = new Float32Array(particleCount * 3);
+      const sizes = new Float32Array(particleCount);
+      const colors = new Float32Array(particleCount * 3);
+
+      for (let i = 0; i < particleCount; i++) {
+        positions[i * 3] = (Math.random() - 0.5) * 80;
+        positions[i * 3 + 1] = (Math.random() - 0.5) * 80;
+        positions[i * 3 + 2] = (Math.random() - 0.5) * 80;
+        sizes[i] = Math.random() * 3 + 1;
+        const c = 0.1 + Math.random() * 0.2;
+        colors[i * 3] = c;
+        colors[i * 3 + 1] = c;
+        colors[i * 3 + 2] = c + Math.random() * 0.1;
+      }
+
+      geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+      geometry.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
+      geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+
+      const material = new THREE.PointsMaterial({
+        size: 0.08,
+        vertexColors: true,
+        transparent: true,
+        opacity: 0.8,
+        blending: THREE.AdditiveBlending,
+        sizeAttenuation: true,
+      });
+
+      particles = new THREE.Points(geometry, material);
+      scene.add(particles);
+
+      // Floating geometric lines
+      const lineGeo = new THREE.BufferGeometry();
+      const linePositions = [];
+      for (let i = 0; i < 120; i++) {
+        const x = (Math.random() - 0.5) * 100;
+        const y = (Math.random() - 0.5) * 100;
+        const z = (Math.random() - 0.5) * 100;
+        linePositions.push(x, y, z);
+        linePositions.push(
+          x + (Math.random() - 0.5) * 8,
+          y + (Math.random() - 0.5) * 8,
+          z + (Math.random() - 0.5) * 8
+        );
+      }
+      lineGeo.setAttribute('position', new THREE.Float32BufferAttribute(linePositions, 3));
+      const lineMat = new THREE.LineBasicMaterial({
+        color: 0xffffff,
+        transparent: true,
+        opacity: 0.03,
+      });
+      const lines = new THREE.LineSegments(lineGeo, lineMat);
+      scene.add(lines);
+
+      // Mouse move tracking for 3D
+      document.addEventListener('mousemove', (e) => {
+        mouse3D.x = (e.clientX / w) * 2 - 1;
+        mouse3D.y = -(e.clientY / h) * 2 + 1;
+      });
+
+      animate3D();
+    }
+
+    function animate3D() {
+      requestAnimationFrame(animate3D);
+      const t = clock.getElapsedTime();
+
+      if (particles) {
+        particles.rotation.x = Math.sin(t * 0.03) * 0.1;
+        particles.rotation.y += 0.0005;
+        particles.rotation.y += mouse3D.x * 0.0005;
+        particles.rotation.x += mouse3D.y * 0.0003;
+      }
+
+      renderer.render(scene, camera);
+    }
+
+    window.addEventListener('resize', () => {
+      if (!camera || !renderer) return;
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+      camera.aspect = w / h;
+      camera.updateProjectionMatrix();
+      renderer.setSize(w, h);
+    });
+
+    init3D();
+
+    // =============================================
+    // SCROLL REVEAL ANIMATIONS
+    // =============================================
+    const revealElements = document.querySelectorAll('.reveal');
+
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.15 });
+
+    revealElements.forEach(el => revealObserver.observe(el));
+
+    // =============================================
+    // SMOOTH PARALLAX ON SCROLL
+    // =============================================
+    let scrollY = 0;
+    window.addEventListener('scroll', () => {
+      scrollY = window.pageYOffset;
+      const hero = document.querySelector('.hero-title');
+      if (hero) {
+        hero.style.transform = 'translateY(' + (scrollY * 0.15) + 'px)';
+        hero.style.opacity = Math.max(0, 1 - scrollY * 0.002);
+      }
+      const heroTag = document.querySelector('.hero-tag');
+      if (heroTag) {
+        heroTag.style.transform = 'translateY(' + (scrollY * 0.1) + 'px)';
+        heroTag.style.opacity = Math.max(0, 1 - scrollY * 0.003);
+      }
+    });
+
+    // =============================================
+    // LOAD CONTENT ON START
+    // =============================================
+    loadContent();
+
+    console.log('%c Abdullah Usman ', 'background: #0a0a0a; color: #fff; font-size: 24px; font-weight: bold; padding: 10px 20px;');
+    console.log('%c 3D Visual Storytelling & Interactive Web Experiences ', 'color: #666; font-size: 12px;');
+  </script>
+</body>
+</html>
